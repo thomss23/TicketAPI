@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -16,13 +17,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import playground.api.model.GenerateRequest;
+import playground.api.repositories.QRImagesRepository;
 import playground.api.services.QRGeneratorService;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(GenerateController.class)
-@TestPropertySource(properties = {"spring.main.web-application-type=none"})
+@SpringBootTest
+@AutoConfigureMockMvc
 public class GenerateTicketIntegrationTest {
 
     @Autowired
@@ -31,9 +33,6 @@ public class GenerateTicketIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
-    QRGeneratorService qrGeneratorService;
-
     @Test
     void testGenerateTicket() throws Exception {
         // Arrange
@@ -41,7 +40,7 @@ public class GenerateTicketIntegrationTest {
 
         // Act
         mockMvc.perform(MockMvcRequestBuilders
-                .put("/generate")
+                .put("/api/generate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(generateRequest)))
                 .andExpect(status().isOk())
