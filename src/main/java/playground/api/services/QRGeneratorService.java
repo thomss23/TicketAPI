@@ -18,8 +18,7 @@ public class QRGeneratorService {
     private final QRImagesRepository qrImagesRepository;
 
     private QRCode getCode(String content) {
-        QRCode qr = QRCode.from(content);
-        return qr;
+        return QRCode.from(content);
     }
 
     public byte[] getQrCodeBytes(String content) {
